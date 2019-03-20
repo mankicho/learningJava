@@ -5,6 +5,17 @@ public class Member {
     private String password;
     private String name;
 
+
+
+        // 회원정보를 Text파일에 저장하는 형태로 변환
+
+
+        // 회원정보를 Text파일에 저장하는 형태로 변환
+        public String convert2TextData() {
+            return id + " " + password + " " + name;
+        }
+
+
     public Member() {
 
     }
@@ -48,3 +59,5 @@ public class Member {
         return true;
                 }
 }
+
+

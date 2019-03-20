@@ -3,6 +3,7 @@ package Main.java.bankbook.member.repository;
 import Main.java.bankbook.common.util.ScannerService;
 import Main.java.bankbook.member.model.Member;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,6 +12,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class MemberRepository {
+
+    private BufferedWriter bufferedWriter; // BufferedWriter
     private static final String MEMBER_FILE_PATH = "C:\\Users\\82102\\IdeaProjects\\untitled6\\src\\Main\\resource\\member";
     private static final String SEPARATOR = " ";
     private Scanner scanner;
@@ -21,15 +24,30 @@ public class MemberRepository {
 
     }
 
-    public void openWrite() {
+    public void openWriter() {
         try {
-            // 여기 어디에 선언이 있어 왜 위에 선언하고 여기서 초기화하냐
-            // 왜냐면 이걸 쓰는건 이 메소드가 아니고 밖이니까
-            fileWriter = new FileWriter(new File(MEMBER_FILE_PATH), true); // appendMode라는건 이어쓰기 할거냐 라는거
+            bufferedWriter = new BufferedWriter(new FileWriter(new File(MEMBER_FILE_PATH), true)); // 여기
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
+
+    public Member insertMember(Member member) {
+
+        try {
+            openWriter(); // 파일에 쓸 툴을 오픈
+            bufferedWriter.write(member.convert2TextData()); // 데이터를 씀
+            bufferedWriter.flush(); // 파일에 실제로 씀
+            bufferedWriter.close(); // 파일 툴 닫음
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return member;
+    }
+
 
     public List<Member> getAllMembersInFile() {
         scanner = ScannerService.getFileScanner(MEMBER_FILE_PATH);
@@ -86,6 +104,10 @@ public class MemberRepository {
 
     }
 }
+
+
+
+
 
 // TODO 1. 회원정보 조회(단건) Member selectMember(String id, String password);
 // TODO 2. 회원 가입(insert)는 같이 할거임
