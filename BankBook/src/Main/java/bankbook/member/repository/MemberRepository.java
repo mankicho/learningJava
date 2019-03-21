@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class MemberRepository {
 
     private BufferedWriter bufferedWriter; // BufferedWriter
-    private static final String MEMBER_FILE_PATH = "C:\\Users\\82102\\IdeaProjects\\untitled6\\src\\Main\\resource\\member";
+    private static final String MEMBER_FILE_PATH =  "C:\\Users\\82102\\Desktop\\dev\\learningJava\\BankBook\\src\\Main\\resource\\member";
     private static final String SEPARATOR = " ";
     private Scanner scanner;
 
@@ -84,7 +84,7 @@ public class MemberRepository {
         }
 
       }
-    return new Member();
+    return new Member(id,password);
     }
 
 

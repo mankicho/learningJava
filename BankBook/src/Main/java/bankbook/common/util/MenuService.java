@@ -7,8 +7,6 @@ import Main.java.bankbook.member.repository.MemberRepository;
 import Main.java.bankbook.member.service.MemberService;
 
 
-
-
 public class MenuService {
 
 
@@ -20,13 +18,12 @@ public class MenuService {
     }
 
 
-
     public Member startLoginMenu() {
         Member loginMember = new Member();
-        MemberRepository memberRepository = new MemberRepository();
-        for(int i=0;i<memberRepository.getAllMembersInFile().size();i++){
-            loginMember = memberRepository.getAllMembersInFile().get(i);
-        }
+//        MemberRepository memberRepository = new MemberRepository();
+//        for(int i=0;i<memberRepository.getAllMembersInFile().size();i++){
+//            loginMember = memberRepository.getAllMembersInFile().get(i);
+//        }
         int selectedMenu;
 
         do { // continue 여기로 돌아옴
@@ -51,12 +48,14 @@ public class MenuService {
                 String idInput = ScannerService.getScanner().next();
                 System.out.println("비밀번호를 입력하세요");
                 String passwordInput = ScannerService.getScanner().next();
-                loginMember = memberService.getMember(idInput,passwordInput);
+
+
                 // step3. 입력받은 값이 올바른 입력값인지 검증
 
                 // 파일의 첫번째, 두번째 입력값도
-                memberService.memberLogin(idInput,passwordInput);
 
+                memberService.memberLogin(idInput, passwordInput);
+                loginMember = memberService.getMember(idInput, passwordInput);
 
 
                 //로그인 멤버에 파일정보가 들어가려면.
@@ -71,23 +70,52 @@ public class MenuService {
             }
 
             if (selectedMenu == 2) { // 회원가입
+                System.out.println("아이디를 입력하세요");
+                String id = getIdFromConsole();
+                System.out.println("비번 입력");
+                String password = getIdFromConsole();
+                System.out.println("이름 입력");
+                String name = getIdFromConsole();
                 // step1. 유저뷰를 보여줌
+
                 // step2. 입력받은 아이디가 이미 존재하는 아이디인지 확인
-                // String id = getIdFromConsole();
+                if (memberService.existId(id)) {
+                    System.out.println("이미 존재하는 아이디야 다시 시도해");
+                    System.out.println();
+                    continue;
+                }
+                if (!memberService.existId(id)) {
+                    loginMember.setId(id); //멤버 아이디
+                    loginMember.setPassword(password); //멤버 비번
+                    loginMember.setName(name);//멤버이름
+
+                    loginMember.convert2TextData();//멤버를 텍스트파일 형식으로 변환
+
+                    memberService.insertMemberTxt2Database(loginMember);
+
+                }
+
                 // if (memberService.existId(id)) { // 존재하는 아이디면
                 //   System.out.println("이미 존재하는 아이디입니다. 다시 시도해주세요\n");
                 //   continue;
                 // }
                 // step3. 존재하면 다시시도 & 존재하지 않으면 회원가입
 
+
             }
         }
-            while (selectedMenu > 0 && !loginMember.existMember())
+        while (selectedMenu > 0 && !loginMember.existMember())
                 ; // <<<< 여기 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-            // 이 조건의 의미 1.정상적인 메뉴를 입력했으면서 loginMember가 존재하는회원이 아닐때까지
-            // 이 조건이 거짓이 되어서 loop이 끝나는 시점은
-            // 1. 정상적인 메뉴를 입력하지 않은경우 또는 2. loginMember존재하는회원일 경우(정상적으로 로그인 된 경우)
+        // 이 조건의 의미 1.정상적인 메뉴를 입력했으면서 loginMember가 존재하는회원이 아닐때까지
+        // 이 조건이 거짓이 되어서 loop이 끝나는 점은
+        //            // 1. 정상적인 메뉴를 입력하지 않은경우 또는 2. loginMember존재하는회원일 경우(정상적으로 로그인 된 경우)시
 
-            return loginMember;
-        }
+        return loginMember;
     }
+
+
+    public String getIdFromConsole() {
+        String inputValue = ScannerService.getScanner().next();
+        return inputValue;
+    }
+}
