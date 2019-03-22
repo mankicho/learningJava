@@ -14,11 +14,11 @@ import java.util.Scanner;
 public class MemberRepository {
 
     private BufferedWriter bufferedWriter; // BufferedWriter
-    private static final String MEMBER_FILE_PATH =  "C:\\Users\\82102\\Desktop\\dev\\learningJava\\BankBook\\src\\Main\\resource\\member";
-    private static final String SEPARATOR = " ";
+    private static final String MEMBER_FILE_PATH =  "C:\\Users\\82102\\Desktop\\dev\\learningJava\\BankBook\\src\\Main\\resource\\member"; // 파일경로
+    private static final String SEPARATOR = " "; // 텍스트파일에 한칸씩 띄어쓰기되서 저장되므로 읽기위한 변수선언
     private Scanner scanner;
 
-    private FileWriter fileWriter;
+    private FileWriter fileWriter; // 파일을 읽는 함수를 쓰겠다고 선언
 
     public MemberRepository() {
 
@@ -71,9 +71,7 @@ public class MemberRepository {
         return memberList;
     }
 
-        //DB에서 꺼내오면 꺼내온거를 loginMember에 저장.
-    // 파라미터 입력하는곳에 실제변수넣어도 의미없잖아.
-    // Member member1 = new Member(idInput,passwordInput)
+
     public Member selectMember(String id, String password){
         //리스트로 해서 선언후 텍스트파일을 넣어주고
         //아이디와 패스워드가 같으면 그 부분만 빼준다.
@@ -82,7 +80,6 @@ public class MemberRepository {
         if(id.equals(member.getId()) && password.equals(member.getPassword())){
         return member;
         }
-
       }
     return new Member(id,password);
     }

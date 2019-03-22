@@ -1,5 +1,7 @@
 package Main.java.bankbook.common.util;
 
+
+import Main.java.bankbook.account.AccountService;
 import Main.java.bankbook.common.view.consoleView;
 import Main.java.bankbook.member.model.Member;
 
@@ -20,11 +22,9 @@ public class MenuService {
 
     public Member startLoginMenu() {
         Member loginMember = new Member();
-//        MemberRepository memberRepository = new MemberRepository();
-//        for(int i=0;i<memberRepository.getAllMembersInFile().size();i++){
-//            loginMember = memberRepository.getAllMembersInFile().get(i);
-//        }
+
         int selectedMenu;
+        int selectedMenuLogin;
 
         do { // continue 여기로 돌아옴
 
@@ -40,31 +40,37 @@ public class MenuService {
             /** 여기가 과제 **/
             if (selectedMenu == 1) { // 로그인
 
-
-                // step1. 아이디와 비밀번호를 입력하라는 유저뷰를 보여줌
-                // step2. 아이디와 비밀번호를 입력받음
-
-                System.out.println("아이디를 입력하세요");
+                // ID,PASSWORD 입력
+                System.out.println("아이디를 입력해주세요");
                 String idInput = ScannerService.getScanner().next();
-                System.out.println("비밀번호를 입력하세요");
-                String passwordInput = ScannerService.getScanner().next();
+                System.out.println("비밀번호를 입력해주세요");
+                String passInput = ScannerService.getScanner().next();
 
+                //입력한 값을 loginMember 에 대입
+                loginMember = memberService.getMember(idInput,passInput);
 
-                // step3. 입력받은 값이 올바른 입력값인지 검증
+                //입력한 값이 텍스트파일에 저장된 정보가 맞는지?
+                memberService.checkedIDPassword(idInput,passInput);
 
-                // 파일의 첫번째, 두번째 입력값도
+                if(!loginMember.existMember()){
+                    System.out.println("존재하지 않는 아이디입니다. 다시 시도해주세요");
+                    continue;
+                }
 
-                memberService.memberLogin(idInput, passwordInput);
-                loginMember = memberService.getMember(idInput, passwordInput);
+                //로그인 되었을 때
+                if(memberService.loginSuccess(idInput,passInput)){
+                    AccountService accountService = new AccountService();
+                    System.out.println("로그인 되었습니다.");
+                    consoleView.startMainMenu();
+                    selectedMenuLogin = ScannerService.getScanner().nextInt();
 
-
-                //로그인 멤버에 파일정보가 들어가려면.
-
-                // step5. 에러메세지를 띄워야하기때문에 조건검사를 한번 더 하고 continue 시킴
-
-                // step5. 구현
-                if (!loginMember.existMember()) {
-                    System.out.println("정보가 정상적으로 조회되지 않았습니다. 다시 시도해 주세요\n");
+                    if(selectedMenuLogin == 1){
+                        accountService.checkAccount(loginMember);
+                    }
+                }
+                //로그인 실패 시
+                if(!memberService.loginSuccess(idInput,passInput)){
+                    System.out.println("아이디 또는 비밀번호가 틀렸습니다");
                     continue;
                 }
             }
@@ -104,8 +110,8 @@ public class MenuService {
 
             }
         }
-        while (selectedMenu > 0 && !loginMember.existMember())
-                ; // <<<< 여기 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        while (selectedMenu > 0 && !loginMember.existMember());
+                 // <<<< 여기 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         // 이 조건의 의미 1.정상적인 메뉴를 입력했으면서 loginMember가 존재하는회원이 아닐때까지
         // 이 조건이 거짓이 되어서 loop이 끝나는 점은
         //            // 1. 정상적인 메뉴를 입력하지 않은경우 또는 2. loginMember존재하는회원일 경우(정상적으로 로그인 된 경우)시
