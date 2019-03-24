@@ -22,7 +22,7 @@ public class AccountRepository {
     private FileWriter filewriter;
 
 
-
+    /** 파일 여는 매소드 **/
     public void openWriter() {
         try {
             bufferedWriter = new BufferedWriter(new FileWriter(new File(ACCOUNT_FILE_PATH), true)); // 여기
@@ -31,7 +31,11 @@ public class AccountRepository {
         }
     }
 
-    // data파일에서 계좌정보 읽어와서  AccountList라는 통에 담기.
+
+
+
+
+    /** data파일에서 계좌정보 읽어와서  AccountList라는 통에 담기. **/
     public List<Account> getAllAccountsInFile() {
         scanner = ScannerService.getFileScanner(ACCOUNT_FILE_PATH);
         List<Account> AccountList = new ArrayList<>(); // 돌려줄 회원데이터 모음집
@@ -45,8 +49,11 @@ public class AccountRepository {
                 continue;
             }
 
+            //text파일엔 String만있으니 계좌정보의 double로 형변환.
+            double accountBalance =  Double.parseDouble(AccountDataStringArray[2]);
+
             // 이상한거 없으면 DB에서 읽어온 한 줄의 회원정보로 회원데이터생성 (parsing)
-            Account readAccount = new Account(AccountDataStringArray[0], AccountDataStringArray[1], AccountDataStringArray[2]); //변환
+            Account readAccount = new Account(AccountDataStringArray[0], AccountDataStringArray[1],accountBalance); //변환
             // txt 1줄 -> 자바 객체로 >>>>>>> 데이터베이스에서 한줄 읽은 데이터를 -> 자바 객체로
             AccountList.add(readAccount);
         }
@@ -54,11 +61,14 @@ public class AccountRepository {
         return AccountList;
     }
 
-    //입력한 값을 datafile에 맞는 형식으로 쓰고 실제로 파일에 입력 후 닫기.
+
+
+
+    /**입력한 값을 datafile에 맞는 형식으로 쓰고 실제로 파일에 입력 후 닫기. **/
     public Account insertAccount(Account account) {
     try{
         openWriter();
-        bufferedWriter.write(account.convertToDataFile());
+        bufferedWriter.write(account.convertToDataFile()+"\n");
         bufferedWriter.flush();
         bufferedWriter.close();
     }catch(IOException e){

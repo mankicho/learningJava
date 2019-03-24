@@ -11,6 +11,12 @@ import Main.java.bankbook.member.service.MemberService;
 
 public class MenuService {
 
+    private Member loginMember = new Member();
+
+
+    public Member getLoginMember() {
+        return loginMember;
+    }
 
     private MemberService memberService;
 
@@ -21,10 +27,10 @@ public class MenuService {
 
 
     public Member startLoginMenu() {
-        Member loginMember = new Member();
+
 
         int selectedMenu;
-        int selectedMenuLogin;
+
 
         do { // continue 여기로 돌아옴
 
@@ -47,35 +53,29 @@ public class MenuService {
                 String passInput = ScannerService.getScanner().next();
 
                 //입력한 값을 loginMember 에 대입
-                loginMember = memberService.getMember(idInput,passInput);
 
-                //입력한 값이 텍스트파일에 저장된 정보가 맞는지?
-                memberService.checkedIDPassword(idInput,passInput);
-
-                if(!loginMember.existMember()){
-                    System.out.println("존재하지 않는 아이디입니다. 다시 시도해주세요");
-                    continue;
-                }
-
+                loginMember = memberService.getMember(idInput, passInput);
                 //로그인 되었을 때
-                if(memberService.loginSuccess(idInput,passInput)){
-                    AccountService accountService = new AccountService();
-                    System.out.println("로그인 되었습니다.");
-                    consoleView.startMainMenu();
-                    selectedMenuLogin = ScannerService.getScanner().nextInt();
 
-                    if(selectedMenuLogin == 1){
-                        accountService.checkAccount(loginMember);
-                    }
+
+                if (memberService.loginSuccess(idInput, passInput)) {
+
+                    System.out.println("로그인 되었습니다.");
                 }
+
                 //로그인 실패 시
-                if(!memberService.loginSuccess(idInput,passInput)){
-                    System.out.println("아이디 또는 비밀번호가 틀렸습니다");
-                    continue;
+                if (!memberService.loginSuccess(idInput, passInput)) {
+                    if (memberService.existId(idInput)) {
+                        System.out.println("아이디 또는 비밀번호가 틀렸습니다");
+                    }
+                    if (!memberService.existId(idInput)) {
+                        System.out.println("존재하지 않는 아이디입니다");
+                    }
                 }
             }
 
             if (selectedMenu == 2) { // 회원가입
+                Member member = new Member();
                 System.out.println("아이디를 입력하세요");
                 String id = getIdFromConsole();
                 System.out.println("비번 입력");
@@ -88,16 +88,16 @@ public class MenuService {
                 if (memberService.existId(id)) {
                     System.out.println("이미 존재하는 아이디야 다시 시도해");
                     System.out.println();
-                    continue;
+
                 }
                 if (!memberService.existId(id)) {
-                    loginMember.setId(id); //멤버 아이디
-                    loginMember.setPassword(password); //멤버 비번
-                    loginMember.setName(name);//멤버이름
+                    member.setId(id);
+                    member.setPassword(password);
+                    member.setName(name);
 
-                    loginMember.convert2TextData();//멤버를 텍스트파일 형식으로 변환
+                    member.convert2TextData();//멤버를 텍스트파일 형식으로 변환
 
-                    memberService.insertMemberTxt2Database(loginMember);
+                    memberService.insertMemberTxt2Database(member);
 
                 }
 
@@ -107,16 +107,40 @@ public class MenuService {
                 // }
                 // step3. 존재하면 다시시도 & 존재하지 않으면 회원가입
 
-
             }
-        }
-        while (selectedMenu > 0 && !loginMember.existMember());
-                 // <<<< 여기 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        } while (selectedMenu > 0 && !memberService.loginSuccess(loginMember.getId(), loginMember.getPassword()));
+        // <<<< 여기 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         // 이 조건의 의미 1.정상적인 메뉴를 입력했으면서 loginMember가 존재하는회원이 아닐때까지
-        // 이 조건이 거짓이 되어서 loop이 끝나는 점은
-        //            // 1. 정상적인 메뉴를 입력하지 않은경우 또는 2. loginMember존재하는회원일 경우(정상적으로 로그인 된 경우)시
+        // 이 조건이 거이 되어서 loop이 끝나는 점은
+        // 1. 정상적인 메뉴를 입력하지 않은경우 또는 2. loginMember존재하는회원일 경우(정상적으로 로그인 된 경우)시
 
         return loginMember;
+    }
+
+
+    //여기 매소드에서 스타드메뉴 매소드의 멤버변수에 접근하는법/
+    public void startBankBookManagementMenu() {
+        AccountService accountService = new AccountService();
+        int selectedMenuLogin = 0;
+
+
+        do {
+            consoleView.startMainMenu();
+            selectedMenuLogin = ScannerService.getScanner().nextInt();
+            switch (selectedMenuLogin) {
+                case 1:
+                    accountService.checkAccount(loginMember);
+                    break;
+                case 2:
+                    accountService.deposit();
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    accountService.AccountProduce(loginMember);
+                    break;
+            }
+        } while (selectedMenuLogin > 0);
     }
 
 
@@ -125,3 +149,4 @@ public class MenuService {
         return inputValue;
     }
 }
+//}

@@ -36,8 +36,6 @@ public class MemberService {
             if(id.equals(member.getId())&&password.equals(member.getPassword())){
                 return true;
             }
-            if(id.equals(member.getId())&&!password.equals(member.getPassword())){
-            }
         }
         return false;
     }

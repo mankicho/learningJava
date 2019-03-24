@@ -38,7 +38,7 @@ public class MemberRepository {
 
         try {
             openWriter(); // 파일에 쓸 툴을 오픈
-            bufferedWriter.write(member.convert2TextData()); // 데이터를 씀
+            bufferedWriter.write(member.convert2TextData()+"\n"); // 데이터를 씀
             bufferedWriter.flush(); // 파일에 실제로 씀
             bufferedWriter.close(); // 파일 툴 닫음
         } catch (IOException e) {
@@ -62,11 +62,11 @@ public class MemberRepository {
                 continue;
             }
 
-            // 이상한거 없으면 DB에서 읽어온 한 줄의 회원정보로 회원데이터생성 (parsing)
-            Member readMember = new Member(memberDataStringArray[0], memberDataStringArray[1], memberDataStringArray[2]); //변환
-            // txt 1줄 -> 자바 객체로 >>>>>>> 데이터베이스에서 한줄 읽은 데이터를 -> 자바 객체로
-            memberList.add(readMember);
-        }
+        // 이상한거 없으면 DB에서 읽어온 한 줄의 회원정보로 회원데이터생성 (parsing)
+        Member readMember = new Member(memberDataStringArray[0], memberDataStringArray[1], memberDataStringArray[2]); //변환
+        // txt 1줄 -> 자바 객체로 >>>>>>> 데이터베이스에서 한줄 읽은 데이터를 -> 자바 객체로
+        memberList.add(readMember);
+    }
 
         return memberList;
     }
@@ -76,7 +76,7 @@ public class MemberRepository {
         //리스트로 해서 선언후 텍스트파일을 넣어주고
         //아이디와 패스워드가 같으면 그 부분만 빼준다.
     List<Member> memberList = getAllMembersInFile();
-    for(Member member : memberList){
+        for(Member member : memberList){
         if(id.equals(member.getId()) && password.equals(member.getPassword())){
         return member;
         }

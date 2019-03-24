@@ -15,6 +15,7 @@ public class consoleView {
         System.out.println("1. 계좌조회"); //계좌번호 , 잔고 ,
         System.out.println("2. 입금");
         System.out.println("3. 출금");
+        System.out.println("4. 계좌생성");
         System.out.print("입력해주세요 : ");
 
     }

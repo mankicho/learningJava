@@ -3,14 +3,31 @@ package Main.java.bankbook.account;
 public class Account {
     private String id;
     private String name;
-    private String balance;
+    private double balance;
+    private int accountNumber;
 
+    public int getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(int accountNumber) {
+        this.accountNumber = accountNumber;
+    }
 
     public Account(){
 
     }
 
-    public Account(String id, String name, String balance){
+
+    public Account(String id, String name, int accountNumber){
+        this.id = id;
+        this.name = name;
+        this.accountNumber = accountNumber;
+        this.balance = 0.0;
+
+    }
+
+    public Account(String id, String name, double balance){
         this.id = id;
         this.name = name;
         this.balance = balance;
@@ -36,15 +53,15 @@ public class Account {
         this.name = name;
     }
 
-    public String getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(String balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 
     public String convertToDataFile(){
-        return id + " " + name;
+        return id + " " + name + " " + balance + " " + accountNumber;
     }
 }

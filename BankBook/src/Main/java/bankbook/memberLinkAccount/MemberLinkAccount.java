@@ -10,22 +10,18 @@ import java.util.List;
 
 public class MemberLinkAccount {
     AccountRepository accountRepository = new AccountRepository();
-    MemberRepository memberRepository = new MemberRepository();
+
     //ACcount의 정보와 Member의 정보 Name이 같으면 계좌정보 돌려주기
     List<Account> accountListOfMember = accountRepository.getAllAccountsInFile();
-    List<Member> memberListOfAccount = memberRepository.getAllMembersInFile();
 
+    // 계좌 txt파일을 쭉읽어서 같은이름이 있으면 그 계좌정보를 리턴.
+    public Account memberLinkAccount(Member AccountOwner) {
 
-    // 멤버 txt파일을 쭉 읽고 계좌 txt파일을 쭉읽어서 같은이름이 있으면 그 계좌정보를 리턴.
-    public Account memberLinkAccount(Member AccountOwner){
-
-    for(Member member : memberListOfAccount){
-        for(Account account : accountListOfMember){
-            if(member.getName().equals(account.getName())){
+        for (Account account : accountListOfMember) {
+            if (AccountOwner.getName().equals(account.getName())) {
                 return account;
             }
         }
-    }
-    return new Account();
+        return new Account();
     }
 }
