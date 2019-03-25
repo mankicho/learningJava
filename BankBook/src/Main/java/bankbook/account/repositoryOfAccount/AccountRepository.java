@@ -1,80 +1,54 @@
 package Main.java.bankbook.account.repositoryOfAccount;
 
-import Main.java.bankbook.account.Account;
+import Main.java.bankbook.account.model.Account;
 import Main.java.bankbook.common.util.ScannerService;
 
-
-import java.awt.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class AccountRepository {
-    private BufferedWriter bufferedWriter; // BufferedWriter
-    private static final String ACCOUNT_FILE_PATH = "C:\\Users\\82102\\Desktop\\dev\\learningJava\\BankBook\\src\\Main\\java\\bankbook\\account\\dataFile";
-    private static final String SEPARATOR = " ";
-    private Scanner scanner;
+    Account account;
+    /**
+     * 파일의 경로를 선언하고, 그파일을 읽어오는 함수를 짜기.
+     **/
+    public static final String ACCOUNT_DATA_FILE = "C:\\Users\\82102\\Desktop\\dev\\learningJava\\BankBook\\src\\Main\\java\\bankbook\\account\\resource\\AccountdataFile";
+    public static final String SAPERATE = "  ";
+    private BufferedWriter bufferedWriter;
 
-    private FileWriter filewriter;
-
-
-    /** 파일 여는 매소드 **/
     public void openWriter() {
-        try {   //읽고 삭제하고 받은걸 다시 쓴다 //append = 이어쓰기 false면 덮어쓰기 append 면 이어쓰기
-            bufferedWriter = new BufferedWriter(new FileWriter(new File(ACCOUNT_FILE_PATH), true)); // 여기
-        } catch (IOException e) {
+        try {
+            bufferedWriter = new BufferedWriter(new FileWriter(new File(ACCOUNT_DATA_FILE),true));
+        }catch(IOException e){
             e.printStackTrace();
         }
     }
 
+    /**
+     텍스트파일에 있는 데이터를 자바 객체에 담아주기
+     텍스트파일은 배열형식이기때문에 돌려줄때 배열,
+     배열안에 값은 account
+     파일을 읽어서 통에 담아두는것이기때문에 파라미터는 필요없다.
+     */
+
+    public List<Account> getAllAccountOfAccountDataFile() {
+        Scanner scanner = ScannerService.getFileScanner(ACCOUNT_DATA_FILE);
+        List<Account> accountList = new ArrayList<>(); // Account 정보를 담을 통
+
+        while(scanner.hasNext()){
+            String readData = scanner.nextLine(); //한줄의 데이터를 읽어서 readData에 저장
+            String[] data2AccountShape = readData.split(SAPERATE); //데이터를 SAPERATE 단위로 끊어서 "data" "data" "data"형태로 배열선언
+
+            int String2IntData = Integer.parseInt(data2AccountShape[0]);
+            double String2DoubleData = Double.parseDouble(data2AccountShape[2]);
 
 
-
-
-    /** data파일에서 계좌정보 읽어와서  AccountList라는 통에 담기. **/
-    public List<Account> getAllAccountsInFile() {
-        scanner = ScannerService.getFileScanner(ACCOUNT_FILE_PATH);
-        List<Account> AccountList = new ArrayList<>(); // 돌려줄 회원데이터 모음집
-
-        while (scanner.hasNext()) { // 파일에 정보가 있을때까지 조회
-            String readLine = scanner.nextLine(); // 첫번째 줄 조회 > "kiuisu 1234 김의석"
-            String[] AccountDataStringArray = readLine.split(SEPARATOR); // 읽어온 데이터 분해 String[] "kiuisu" "1234" "김의석"
-
-            if (AccountDataStringArray.length != 4) { // 데이터 이상 있는지 체크
-                // DB에 이상한 값이 있는거임
-                continue;
-            }
-
-            //text파일엔 String만있으니 계좌정보의 double로 형변환.
-            double accountBalance =  Double.parseDouble(AccountDataStringArray[2]);
-
-            // 이상한거 없으면 DB에서 읽어온 한 줄의 회원정보로 회원데이터생성 (parsing)
-            Account readAccount = new Account(AccountDataStringArray[0], AccountDataStringArray[1],accountBalance); //변환
-            // txt 1줄 -> 자바 객체로 >>>>>>> 데이터베이스에서 한줄 읽은 데이터를 -> 자바 객체로
-            AccountList.add(readAccount);
+            account = new Account(String2IntData, data2AccountShape[1], String2DoubleData);
+            accountList.add(account);
         }
-
-        return AccountList;
+        return accountList;
     }
 
 
-
-
-    /**입력한 값을 datafile에 맞는 형식으로 쓰고 실제로 파일에 입력 후 닫기. **/
-    public Account insertAccount(Account account) {
-    try{
-        openWriter();
-        bufferedWriter.write(account.convertToDataFile()+ "\n");
-        bufferedWriter.flush();
-        bufferedWriter.close();
-    }catch(IOException e){
-        e.printStackTrace();
-    }
- return account;
-    }
 }
-

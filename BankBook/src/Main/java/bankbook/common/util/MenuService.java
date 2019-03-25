@@ -1,6 +1,7 @@
 package Main.java.bankbook.common.util;
 
 
+import Main.java.bankbook.account.Service.AccountService;
 import Main.java.bankbook.common.view.ConsoleView;
 import Main.java.bankbook.member.model.Member;
 import Main.java.bankbook.member.repository.MemberRepository;
@@ -59,6 +60,7 @@ public class MenuService {
             }
 
             if (selectedMenu == 2) { // 회원가입
+
                 MemberRepository memberRepository = new MemberRepository();
                 // step1. 유저뷰를 보여줌
                 System.out.println("회원가입 하실 아이디를 입력해주세요");
@@ -69,17 +71,18 @@ public class MenuService {
                 String name = ScannerService.getScanner().next();
 
 
-                if (memberService.existId(id)) { // 존재하는 아이디면
-                    System.out.println("이미 존재하는 아이디입니다. 다시 시도해주세요\n");
+                if (!memberService.existId(id)) {
+                    loginMember = new Member(id, password, name);
+                    memberService.registerOnTextFile(loginMember);
+                    loginMember = new Member();
                     continue;
                 }
-                // step3. 존재하면 다시시도 & 존재하지 않으면 회원가입
-                loginMember = new Member(id,password,name);
 
-                String test = loginMember.convert2TextData();
-                System.out.println(test);
-                // System.out.println(loginMember.getId());
-                memberService.registerOnTextFile(loginMember);
+
+                // step3. 존재하면 다시시도 & 존재하지 않으면 회원가입
+
+                System.out.println("이미 존재하는 아이디입니다. 다시 시도해주세요\n");
+                continue;
             }
 
         } while (selectedMenu > 0 && !loginMember.existMember()); // <<<< 여기 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -90,6 +93,31 @@ public class MenuService {
         return loginMember;
     }
 
+    public Member startBankBookManagementMenu(Member member) {
+
+        AccountService accountService = new AccountService();
+        int selectMenu = 0;
+        do {
+            ConsoleView.startManagementMenu();
+            selectMenu = ScannerService.getScanner().nextInt();
+            switch (selectMenu) {
+                case 1:
+                    accountService.AccountLookInto(member);
+                    System.out.println("계좌를 조회합니다");
+                    break;
+                case 2:
+                    System.out.println("계좌를 생성합니다");
+                    break;
+                case 3:
+                    System.out.println("계좌를 관리합니다.");
+                    break;
+                default:
+                    selectMenu = -1;
+                    System.out.println("프로그램을 종료합니다.");
+            }
+        } while (selectMenu > 0);
+        return new Member();
+    }
 
 }
 

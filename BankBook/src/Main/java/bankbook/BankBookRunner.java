@@ -11,8 +11,8 @@ public class BankBookRunner {
 
         // 존재하는 회원/로그인 완료된 회원이라면 계좌관리 시스템 시작
         if (loginMember.existMember()) {
-            // 계좌관리시스템 시작
-            // menuService.startBankBookManagementMenu(loginMember);
+
+             menuService.startBankBookManagementMenu(loginMember);
         }
 
         System.out.println("프로그램을 종료합니다.");

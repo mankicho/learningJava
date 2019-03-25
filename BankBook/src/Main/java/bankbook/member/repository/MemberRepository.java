@@ -3,31 +3,24 @@ package Main.java.bankbook.member.repository;
 import Main.java.bankbook.common.util.ScannerService;
 import Main.java.bankbook.member.model.Member;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
 public class MemberRepository {
     private static final String MEMBER_FILE_PATH = "C:\\Users\\82102\\Desktop\\dev\\learningJava\\BankBook\\src\\Main\\resource\\member "; // 절대경로 주소 바뀌지 않음 > 상수
     private static final String SEPARATOR = " "; // 값을 구분하는 구분자 안바뀜 > 상수
-    BufferedWriter bufferedWriter;
     private Scanner scanner;
-    private FileWriter fileWriter;
+    private BufferedWriter bufferedWriter;
 
-    public MemberRepository() {
-        scanner = ScannerService.getFileScanner(MEMBER_FILE_PATH);
-    }
 
     public void openWrite() {
         try {
-            // 여기 어디에 선언이 있어 왜 위에 선언하고 여기서 초기화하냐
-            // 왜냐면 이걸 쓰는건 이 메소드가 아니고 밖이니까
-            fileWriter = new FileWriter(new File(MEMBER_FILE_PATH), true); // appendMode라는건 이어쓰기 할거냐 라는거
 
+            //fileWriter = new FileWriter(new File(MEMBER_FILE_PATH), true); // appendMode라는건 이어쓰기 할거냐 라는거
+            bufferedWriter = new BufferedWriter(new FileWriter(new File(MEMBER_FILE_PATH),true));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,7 +38,9 @@ public class MemberRepository {
         return new Member();
     }
 
+
     public List<Member> getAllMembersInFile() {
+        scanner = ScannerService.getFileScanner(MEMBER_FILE_PATH);
         List<Member> memberList = new ArrayList<>(); // 돌려줄 회원데이터 모음집
 
         while (scanner.hasNext()) { // 파일에 정보가 있을때까지 조회
@@ -65,11 +60,12 @@ public class MemberRepository {
 
         return memberList;
     }
+
     public Member insertMember(Member member) {
         try {
             openWrite();              //파일에 write 하려는게 빈값이다.
-            bufferedWriter.write(member.convert2TextData()+"\n");
-            bufferedWriter.flush();
+            bufferedWriter.write(member.convert2TextData() + "\n"); // 파일을
+            bufferedWriter.flush(); //파일을 실제로 써넣는것
             bufferedWriter.close();
         } catch (IOException e) {
             e.printStackTrace();

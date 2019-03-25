@@ -10,7 +10,7 @@ public class MemberService {
         memberRepository = new MemberRepository();
     }
 
-    public Member registerOnTextFile(Member member){
+    public Member registerOnTextFile(Member member) {
         return memberRepository.insertMember(member);
     }
 
