@@ -24,7 +24,7 @@ public class AccountRepository {
 
     /** 파일 여는 매소드 **/
     public void openWriter() {
-        try {
+        try {   //읽고 삭제하고 받은걸 다시 쓴다 //append = 이어쓰기 false면 덮어쓰기 append 면 이어쓰기
             bufferedWriter = new BufferedWriter(new FileWriter(new File(ACCOUNT_FILE_PATH), true)); // 여기
         } catch (IOException e) {
             e.printStackTrace();
@@ -44,7 +44,7 @@ public class AccountRepository {
             String readLine = scanner.nextLine(); // 첫번째 줄 조회 > "kiuisu 1234 김의석"
             String[] AccountDataStringArray = readLine.split(SEPARATOR); // 읽어온 데이터 분해 String[] "kiuisu" "1234" "김의석"
 
-            if (AccountDataStringArray.length != 3) { // 데이터 이상 있는지 체크
+            if (AccountDataStringArray.length != 4) { // 데이터 이상 있는지 체크
                 // DB에 이상한 값이 있는거임
                 continue;
             }
@@ -68,7 +68,7 @@ public class AccountRepository {
     public Account insertAccount(Account account) {
     try{
         openWriter();
-        bufferedWriter.write(account.convertToDataFile()+"\n");
+        bufferedWriter.write(account.convertToDataFile()+ "\n");
         bufferedWriter.flush();
         bufferedWriter.close();
     }catch(IOException e){

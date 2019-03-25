@@ -6,14 +6,10 @@ public class Member {
     private String name;
 
 
-
-        // 회원정보를 Text파일에 저장하는 형태로 변환
-
-
-        // 회원정보를 Text파일에 저장하는 형태로 변환
-        public String convert2TextData() {
-            return id + " " + password + " " + name;
-        }
+    // 회원정보를 Text파일에 저장하는 형태로 변환
+    public String convert2TextData() {
+        return id + " " + password + " " + name;
+    }
 
 
     public Member() {
@@ -44,8 +40,8 @@ public class Member {
         return name;
     }
 
-    public void setId(String id){
-            this.id = id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setPassword(String password) {
@@ -59,9 +55,9 @@ public class Member {
     public boolean existMember() {
         if (this.id == null || this.id.equals("")) {
             return false;
-}
+        }
         return true;
-                }
+    }
 }
 
 

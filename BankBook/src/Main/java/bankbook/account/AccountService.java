@@ -13,6 +13,7 @@ public class AccountService {
     MemberLinkAccount memberLinkAccount = new MemberLinkAccount();
     AccountRepository accountRepository;
     Account account = new Account();
+    int accountNumber = 0;
     int selectNumber;
 
     public AccountService() {
@@ -26,7 +27,7 @@ public class AccountService {
         do {
 
             account = memberLinkAccount.memberLinkAccount(member);
-
+            // sout 부분은 메뉴서비스가 담당할 부분이다.
             //멤버파일의 id와 account파일의 id가 같으면
             System.out.println("1.잔고확인  2.거래내역 3. 종료시 -1입력");
             selectNumber = ScannerService.getScanner().nextInt();
@@ -53,30 +54,35 @@ public class AccountService {
         account.setAccountNumber(ScannerService.getScanner().nextInt());
 
         System.out.println("계좌가 생성되었습니다.");
-        account = new Account(member.getId(), member.getName(),account.getAccountNumber());
+        account = new Account(member.getId(), member.getName(), account.getAccountNumber());
 
         return accountRepository.insertAccount(account);
 
     }
 
     public void deposit() {
-        int count=0;
-        System.out.println("입금하실 분의 이름을 입력해주세요");
-        String name = ScannerService.getScanner().next();
-        List<Account> accountList = accountRepository.getAllAccountsInFile();
-        for (Account account : accountList) {
-            if (account.getName().equals(name)) {
 
+        System.out.println("입금하실 분의 이름과 계좌번호를 입력해주세요");
+        System.out.print("받는사람 이름 : ");
+        String name = ScannerService.getScanner().next();
+        System.out.print("계좌번호 : ");
+        accountNumber = ScannerService.getScanner().nextInt();
+
+        List<Account> accountList = accountRepository.getAllAccountsInFile();
+
+        for (Account account : accountList) {
+            if (account.getName().equals(name) && account.getAccountNumber() == accountNumber) {
                 System.out.println("얼마 입금하시겠습니까");
                 double depositAmount = ScannerService.getScanner().nextDouble();
                 System.out.println("입금 완료되었습니다.");
                 account.setBalance(account.getBalance() + depositAmount);
                 accountRepository.insertAccount(account);
-                break;
+                System.out.println(account.getAccountNumber());
 
             }
-            count++;
         }
+
     }
 }
+
 
