@@ -98,22 +98,24 @@ public class MenuService {
         AccountService accountService = new AccountService();
         int selectMenu = 0;
         do {
-            ConsoleView.startManagementMenu();
+            ConsoleView.startAccountMenu();
             selectMenu = ScannerService.getScanner().nextInt();
             switch (selectMenu) {
                 case 1:
-                    accountService.AccountLookInto(member);
                     System.out.println("계좌를 조회합니다");
+                    accountService.AccountLookInto(member);
                     break;
                 case 2:
                     System.out.println("계좌를 생성합니다");
+                    accountService.produceAccount(member);
                     break;
                 case 3:
                     System.out.println("계좌를 관리합니다.");
+                    accountService.AccountManagement(member);
                     break;
                 default:
                     selectMenu = -1;
-                    System.out.println("프로그램을 종료합니다.");
+                    break;
             }
         } while (selectMenu > 0);
         return new Member();

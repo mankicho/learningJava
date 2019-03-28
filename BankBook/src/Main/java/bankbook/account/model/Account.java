@@ -9,6 +9,12 @@ public class Account {
 
     }
 
+    public Account(int accountNumber, String name){
+        this.accountNumber = accountNumber;
+        this.name = name;
+        this.balance = 0;
+    }
+
     public Account(int accountNumber, String name, double balance){
         this.accountNumber = accountNumber;
         this.name = name;
@@ -45,5 +51,9 @@ public class Account {
             return false;
         }
         return true;
+    }
+
+    public String convertToString(){
+        return accountNumber + "  " + name + "  " + balance;
     }
 }
